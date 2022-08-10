@@ -1,0 +1,17 @@
+import cProfile
+from src.core.ReadProbability import *
+
+def profiler_function():
+    score_dict = ReadProbability().score_prob
+    testkeys = ["6091110", "2041344", "3041133", "4081314", "2041111", "2040800"]
+
+    for key in testkeys:
+        if key in score_dict:
+            print(key, "found", score_dict[key])
+        else:
+            print(key, "not found")
+
+import pstats
+cProfile.run("profiler_function()", "stats")
+p = pstats.Stats('stats')
+p.sort_stats('time').print_stats(1.0)

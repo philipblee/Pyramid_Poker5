@@ -1,0 +1,68 @@
+What do I need to fix?
+- If there are three specials, can non three special hand ever beat it? If there is one 3 special hand, can I
+    ignore the other non three special hands?  I think so.
+- Make design more object oriented - how?
+- Not including High card in Hands 2, 3 and 4.  Takes much longer to include and almost never needed.
+- To reduce intersection calls, I should compare scores first before looking at intersection - more for hands2, 3, 4.
+- creating strings and writing to files are mixed in with other logic - need to separate business logic from writefile logic
+- trip points now only uses suits of card1 and card2, we need trips to reflect suits of all 3 cards
+- Working on HandDictionary which is a class that figures out "all hands" with values in a dictionary - no points needed
+    HandDictionary will allow to dictionary look up based on cards in hand.
+    add a med_value to store 5 cards instead of 3 cards
+    11404 - Ace of spaces,   71412 - House of Aces with Pair of Queens,  41444 - Trip Aces with two Spades
+    This is too complicated, I want a points that is much more intuitive
+    How about I just store the entire hand which is "up to 10 cards sorted" and that becomes the dictionary key
+- points array / points array all have different way of storing hands, need to make consistent
+- look for strategies reduce flushes when there are 10 or more of one suit
+- new bug where wild card in player hand is not substituting with correct card... - cannot reproduce.  Seems like wild
+  card is not found, so there is nothing to substitute.
+- Start giving version numbers - v2.001 to each commit
+- Make RunPyramidPoker more streamline
+- In RunPyramidPoker - In the Interactive Mode, continue to remove all logic.  Leave only presentation layer
+  so I can then convert to Kivy for implementing on IOS
+
+What have I fixed?
+- Just combined analyze_wild_fast and analyze_wild into analyze_wild - simplifies things
+- Changed initialization of arrays to things like 3000 * [[]] - this takes 150 lines of 20 empty lists to one line
+- Added logic in LegalHands which removed hands with duplicate cards (same suit, same rank) ----> This does not work.  Deleting hands removes the possibilities that may be possible.
+- Can I combine WinProb with ScoreDict?
+- I have win_prob and WinProb - need to combine
+- fix printing for wild cards
+- machine learning function is broken - fixed and renamed to CumulativeLearning
+- fixed best_25cards_with_3wild
+- deck_pyramid is too big, it needs to be broken down to smaller objects - smaller now
+------- make a function that draws 6 scores and total points on canvas (input - scores, (x,y coordinate))
+------- fix best_25card_hand - need to remove all that are redundant to PyramidPokerNoWild
+------- 2 wilds works now - by cycling through 2 wild cards, however, some of the wild cards are redundant - need to fix
+------- Can I reduce/eliminate flushes if I have 3 specials?  Does it makes sense to play 3 specials all the time? --- does not help that much
+------- Add points to dictionary, so value is a list[prob,points] instead of just prob no need, it's already using points
+------- if there are 5 trips, or better, then no need for straight and flush
+------- splitting if h6>h5 and intersection is about 10% faster depending on the hands
+------- if len(fourkx_list) >= 3 then no_flush_or_straight
+------- WildList's wild_card_combinations can be eliminated when non spade cards have duplicates
+------- When looping through hand5, start where hand6 is, when looping in hand3, start where hand4 is, etc. 88 seconds to 37 seconds
+------- After checking that hand 4 has no intersection to hand5 and hand6, then check the sum of hands 6, 5, 4 plus max
+        of 3, 2, 1. if that is less than total_points, mark this branch Hopeless and check next branch - goes from 37 seconds down to 10 seconds
+------- BestHand25 - Fixed hopeless code by adding 100 points to total points points due to points improvement based on fillers
+------- RunPyramidPoker - Fixed defect in Interactive Mode where twentyfile_cards is missing underscore*** fixed now
+------- BestHand25 - Fixed defect where fillers created trips from pairs
+------- HandDictionary - fixed defect with Hand() versus Hand(hand)
+------- LegalHands - fixed defect where 5 trips and 2 pairs are not enough to make No_Flush_or_Straight = True
+------- HandDictionary - fixed defect where hand6 was giving wrong points - prob was .99 versus 99
+------- Fixed defect where WildList was not including cards that made longer straight flushes
+
+
+Not doing
+- Use hex to store 5 card short value? -- not a good idea - too complex looking
+
+
+Current Program Stucture:
+- RunPyramidPoker is main program - calls following programs
+    - function best_25cards_with_3wilds - WildList
+        - PyramidPokerNoWild
+            - LegalHands - calls
+                - function - analyze_wild
+                - function - get_points_from_hand(hand, str(hand_num))
+                    - uses WinProb to get short_value(points)
+                    - use short_value to look up "probability of winning" * win points = points
+

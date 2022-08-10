@@ -1,0 +1,8 @@
+What needs to be fixed?
+- Trips do not take third suit into consideration - score of 41444 means trip Aces and first two are spades, how do I fix this?
+  The entire program is based on "score"
+- Should I redo how scores work?
+- They could be just three attributes of an object?
+- Card has rank and suit
+- Hand has - hand_value(1 to 20), hand_description(high card, pair, trip, straight, flush, house, 4K, SF, 5K, 6SF, 6K, etc),
+    hand_suits(?),
